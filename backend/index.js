@@ -16,6 +16,7 @@ app.use(morgan("dev"));
 app.use(passport.initialize());
 
 app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/scripts", require("./routes/scriptRoutes"));
 
 
 const PORT = process.env.PORT || 5000;

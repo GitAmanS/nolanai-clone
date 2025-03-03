@@ -1,14 +1,13 @@
 import Header from "@/components/Header";
 import { MdArrowForwardIos } from "react-icons/md";
 
-export default function Home({ searchParams }) {
-  const token = searchParams?.token || null;
+export default async function Home({ searchParams }) {
+  const token = (await searchParams)?.token || null;
   return (
     // <div className="bg-[#1d232c] min-h-screen ">
     //   <Header />
     <div className="bg-[#1d232c] min-h-screen ">
-            <Header />
-      {/* Inline Script to Store Token in Local Storage */}
+      <Header />
       {token && (
         <script
           dangerouslySetInnerHTML={{
@@ -19,9 +18,8 @@ export default function Home({ searchParams }) {
           }}
         />
       )}
-      {/* Hero Section (Positioning Kept Intact) */}
       <div className="relative min-h-screen">
-        {/* Background SVGs */}
+
         <svg
           className="absolute top-0 left-0"
           width="639"
@@ -49,7 +47,6 @@ export default function Home({ searchParams }) {
           ></path>
         </svg>
 
-        {/* Blur Effect */}
         <div
           style={{
             position: "absolute",
@@ -64,7 +61,6 @@ export default function Home({ searchParams }) {
           }}
         />
 
-        {/* Video */}
         <video
           autoPlay
           muted
@@ -78,7 +74,6 @@ export default function Home({ searchParams }) {
           <source src="/meet_bryce.mp4" type="video/mp4" />
         </video>
 
-        {/* Text & Button */}
         <div className="absolute top-[200px] left-14 leading-relaxed text-white text-4xl font-lexend z-10">
           Bring your film project to life <br /> from{" "}
           <span className="text-6xl font-[800]">idea</span> to{" "}
@@ -90,7 +85,6 @@ export default function Home({ searchParams }) {
         </div>
       </div>
 
-      {/* Second Section (Now Stays Below the First Section) */}
       <div className="py-20 text-center text-white">
         <h2 className="text-[40px] font-bold">
           NolanAI is a collaborative film production suite

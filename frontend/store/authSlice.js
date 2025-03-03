@@ -1,63 +1,62 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-
-export const googleLogin = createAsyncThunk(
-  "auth/googleLogin",
-  async (_, { rejectWithValue }) => {
+export const login = createAsyncThunk(
+  "auth/login",
+  async ({ email, password }, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://localhost:5000/api/auth/google/success", {
-        credentials: "include", 
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
-
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.message || "Google login failed");
+        throw new Error(data.message || "Login failed");
       }
-
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      return data; 
+      return data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
   }
 );
 
+export const googleLogin = createAsyncThunk("auth/googleLogin", async () => {
+  window.location.href = "http://localhost:5000/api/auth/google";
+});
+
+export const logout = createAsyncThunk("auth/logout", async () => {
+  return null;
+});
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: JSON.parse(localStorage.getItem("user")) || null,
-    token: localStorage.getItem("token") || null,
+    user: null,
+    token: null,
     loading: false,
     error: null,
   },
-  reducers: {
-    logoutUser: (state) => {
-      state.user = null;
-      state.token = null;
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(googleLogin.pending, (state) => {
+      .addCase(login.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(googleLogin.fulfilled, (state, action) => {
+      .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
         state.token = action.payload.token;
-        state.error = null;
       })
-      .addCase(googleLogin.rejected, (state, action) => {
+      .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+        state.token = null;
       });
   },
 });
 
-export const { logoutUser } = authSlice.actions;
 export default authSlice.reducer;
